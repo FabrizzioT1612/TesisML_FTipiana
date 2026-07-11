@@ -1,0 +1,1194 @@
+/* ==========================================================================
+   CSS PRINCIPAL - ENTORNO SIMULADO DE CIBERSEGURIDAD
+   ========================================================================== */
+
+/* 1. Variables Globales y Diseño del Sistema */
+:root {
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, monospace;
+
+  /* Colores del Sistema */
+  --bg-darkest: #070a13;
+  --bg-dark: #0f1423;
+  --bg-card: rgba(22, 29, 49, 0.65);
+  --bg-card-hover: rgba(30, 39, 66, 0.8);
+  
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(59, 130, 246, 0.15);
+
+  --color-text-main: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  
+  /* Colores de Tráfico y Eventos */
+  --color-normal: #10b981;       /* Verde */
+  --color-brute: #f59e0b;        /* Amarillo */
+  --color-sqli: #ef4444;         /* Rojo */
+  --color-ddos: #8b5cf6;         /* Púrpura */
+  --color-blue: #3b82f6;         /* Azul */
+  --color-system: #6b7280;       /* Gris */
+
+  /* Degradados Premium */
+  --grad-blue: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+  --grad-red: linear-gradient(135deg, #b91c1c 0%, #ef4444 100%);
+  --grad-dark: linear-gradient(180deg, #0f1423 0%, #070a13 100%);
+  --grad-cyber: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ef4444 100%);
+}
+
+/* 2. Reseteo y Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-darkest);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(139, 92, 246, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(239, 68, 68, 0.06) 0px, transparent 50%);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* 3. Estilos del Encabezado */
+.global-header {
+  background: rgba(15, 20, 35, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 12px 0;
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  font-size: 28px;
+  animation: pulse-glow 2s infinite alternate;
+}
+
+.logo-text h1 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: var(--grad-cyber);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-text p {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Pestañas de Navegación */
+.tab-navigation {
+  display: flex;
+  background: rgba(7, 10, 19, 0.6);
+  padding: 4px;
+  border-radius: 30px;
+  border: 1px solid var(--border-color);
+}
+
+.nav-tab {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-tab:hover {
+  color: var(--color-text-main);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.nav-tab.active {
+  color: #fff;
+  background: var(--grad-blue);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+/* 4. Estilos de Diseño Principal */
+.main-content {
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px 24px;
+}
+
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 5. Tarjetas y Efecto Glassmorphism */
+.card {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+}
+
+.glass-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-header h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-desc {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* Efectos de Resplandor de Borde (Glow) */
+.border-glow-blue {
+  box-shadow: 0 4px 30px rgba(59, 130, 246, 0.03);
+}
+.border-glow-blue:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.border-glow-red {
+  box-shadow: 0 4px 30px rgba(239, 68, 68, 0.03);
+}
+.border-glow-red:hover {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.border-glow-green {
+  box-shadow: 0 4px 30px rgba(16, 185, 129, 0.03);
+}
+.border-glow-green:hover {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* 6. Controles de Configuración (Switches) */
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.setting-info label {
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.setting-info span {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* Switch Deslizable */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: .3s;
+  border-radius: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--color-text-muted);
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--color-blue);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+  background-color: #fff;
+  box-shadow: 0 0 8px var(--color-blue);
+}
+
+/* 7. Orquestador de Simulación - Bloques de Acción */
+.simulation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.action-block {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 14px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.action-block:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.action-info h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.action-info p {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.action-controls {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 8. Botones Premium */
+.btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-xs {
+  font-size: 0.72rem;
+  padding: 6px 12px;
+}
+
+.btn-sm {
+  font-size: 0.8rem;
+  padding: 8px 16px;
+}
+
+.btn-blue {
+  background: var(--color-blue);
+  color: #fff;
+}
+.btn-blue:hover {
+  background: #2563eb;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+.btn-emerald {
+  background: var(--color-normal);
+  color: #fff;
+}
+.btn-emerald:hover {
+  background: #059669;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.btn-yellow {
+  background: var(--color-brute);
+  color: #fff;
+}
+.btn-yellow:hover {
+  background: #d97706;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.btn-red {
+  background: var(--color-sqli);
+  color: #fff;
+}
+.btn-red:hover {
+  background: #dc2626;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.btn-purple {
+  background: var(--color-ddos);
+  color: #fff;
+}
+.btn-purple:hover {
+  background: #7c3aed;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.btn-gray {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-main);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.btn-gray:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Barra de progreso de simulaciones */
+.progress-bar-container {
+  width: 100%;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 9px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--color-blue);
+  border-radius: 9px;
+  transition: width 0.1s linear;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+.pulse-green {
+  background: repeating-linear-gradient(
+    45deg,
+    #10b981,
+    #10b981 10px,
+    #059669 10px,
+    #059669 20px
+  );
+  animation: progress-slide 2s linear infinite;
+}
+
+@keyframes progress-slide {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 0; }
+}
+
+/* 9. Fichas de Métricas */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .metrics-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric-card {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.metric-icon {
+  font-size: 26px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.metric-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.metric-label {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* 10. Terminal de Logs Interactiva */
+.terminal-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.terminal-header {
+  background: rgba(7, 10, 19, 0.8);
+  padding: 12px 20px;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.red-dot { background-color: #ef4444; }
+.yellow-dot { background-color: #f59e0b; }
+.green-dot { background-color: #10b981; }
+
+.terminal-title {
+  margin-left: 10px;
+  font-size: 0.88rem !important;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+.log-filter-container {
+  margin-left: auto;
+}
+
+.log-filter-container select {
+  background: var(--bg-darkest);
+  border: 1px solid var(--border-color);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+}
+
+.terminal-body {
+  background-color: #04060b;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  height: 380px;
+  overflow-y: auto;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: #8b9bb4;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar personalizado para la terminal */
+.terminal-body::-webkit-scrollbar {
+  width: 8px;
+}
+.terminal-body::-webkit-scrollbar-track {
+  background: #04060b;
+}
+.terminal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+.terminal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Líneas de Logs Color-Coded */
+.log-line {
+  line-height: 1.4;
+  word-break: break-all;
+  border-left: 3px solid transparent;
+  padding-left: 8px;
+  animation: lineSlideIn 0.15s ease-out forwards;
+}
+
+.system-line {
+  color: var(--color-system);
+  border-left-color: var(--color-system);
+}
+.normal-line {
+  color: #38bdf8; /* Azul claro */
+  border-left-color: var(--color-normal);
+}
+.brute-line {
+  color: #fbbf24; /* Ámbar */
+  border-left-color: var(--color-brute);
+}
+.sqli-line {
+  color: #f87171; /* Rojo claro */
+  border-left-color: var(--color-sqli);
+}
+.ddos-line {
+  color: #c084fc; /* Púrpura claro */
+  border-left-color: var(--color-ddos);
+}
+
+.log-meta {
+  color: #4b5563;
+  margin-right: 4px;
+}
+.log-ip {
+  color: #a3a3a3;
+  font-weight: 500;
+  margin-right: 4px;
+}
+.log-method {
+  font-weight: 700;
+  margin-right: 4px;
+}
+.log-status {
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.status-200 { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.status-401 { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.status-403 { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+.status-429 { background: rgba(139, 92, 246, 0.15); color: #c084fc; }
+
+.log-payload {
+  color: #6b7280;
+  font-style: italic;
+  display: block;
+  margin-top: 2px;
+  padding-left: 10px;
+  border-left: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+/* Pie de la Terminal */
+.terminal-footer {
+  background: rgba(7, 10, 19, 0.8);
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.terminal-stats {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.terminal-stats strong {
+  color: var(--color-text-main);
+}
+
+.separator {
+  margin: 0 10px;
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Badges y estados */
+.badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.badge-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+#waf-badge.active { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+#waf-badge.inactive { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+/* ==========================================================================
+   11. DISEÑO DE LA APLICACIÓN OBJETIVO (APEX VAULT PORTAL)
+   ========================================================================== */
+.bank-app-container {
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 550px;
+  background-color: #0b0f19;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Banner de Estado del WAF en la App */
+.bank-waf-banner {
+  background: rgba(239, 68, 68, 0.08);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.bank-waf-banner.secure {
+  background: rgba(16, 185, 129, 0.08);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.waf-banner-icon {
+  font-size: 16px;
+}
+
+/* Tarjeta del Banco */
+.bank-card {
+  background: rgba(22, 29, 49, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* Pantalla de Login del Banco */
+.auth-card {
+  max-width: 420px;
+  margin: 70px auto;
+}
+
+.bank-logo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.bank-logo-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.bank-logo h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.bank-logo p {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* Formulario */
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #d1d5db;
+}
+
+.form-group input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+}
+
+.btn-bank-primary {
+  width: 100%;
+  background: var(--grad-blue);
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-bank-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-bank-primary:active {
+  transform: translateY(0);
+}
+
+/* Alertas de Feedback */
+.alert-box {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  border: 1px solid transparent;
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.thesis-hint {
+  background: rgba(59, 130, 246, 0.05);
+  border-left: 3px solid var(--color-blue);
+  padding: 10px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.72rem;
+  color: #93c5fd;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.thesis-hint code {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  color: #fff;
+}
+
+/* Portal del Dashboard Bancario */
+#bank-dashboard-screen {
+  padding: 24px;
+}
+
+.dashboard-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.dashboard-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.user-meta h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.user-meta p {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.bank-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .bank-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tarjeta de Tarjeta de Crédito Premium */
+.balance-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.balance-card::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.balance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.bank-card-chip {
+  font-size: 24px;
+}
+
+.account-balance {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin: 15px 0;
+}
+
+.balance-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+}
+
+.account-num {
+  font-family: var(--font-mono);
+  color: #e5e7eb;
+}
+
+.bank-card-type {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #93c5fd;
+}
+
+/* Buscador de transacciones */
+.search-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.search-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.search-form input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-form input:focus {
+  border-color: #6366f1;
+}
+
+.btn-bank-accent {
+  background: #6366f1;
+  border: none;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-bank-accent:hover {
+  background: #4f46e5;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+/* Monitor de consulta SQL interactivo */
+.sql-query-monitor {
+  background: #05070c;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sql-monitor-label {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sql-query-monitor code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #fb7185; /* Rosa brillante para SQL */
+  word-break: break-all;
+}
+
+/* 12. Tablas de datos generales */
+.table-card {
+  padding: 24px 0 0 0; /* Sin padding a los lados para expandir la tabla */
+  overflow: hidden;
+}
+
+.table-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px 16px 24px;
+}
+
+.table-header-row h3 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.data-table th {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 12px 24px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.data-table td {
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: #e5e7eb;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover td {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.amount-debit { color: #f87171; font-weight: 600; }
+.amount-credit { color: #34d399; font-weight: 600; }
+
+/* 13. Pie de página Global */
+.global-footer {
+  background: rgba(15, 20, 35, 0.8);
+  border-top: 1px solid var(--border-color);
+  padding: 24px 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 14. Animaciones y Clases Auxiliares */
+.hidden { display: none !important; }
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.text-red { color: var(--color-sqli); }
+.text-emerald { color: var(--color-normal); }
+.text-green { color: var(--color-normal); }
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.3)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.6)); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lineSlideIn {
+  from { opacity: 0; transform: translateX(-5px); }
+  to { opacity: 1; transform: translateX(0); }
+}

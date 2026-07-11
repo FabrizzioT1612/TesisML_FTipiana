@@ -1,0 +1,22 @@
+{
+  "name": "web-security-simulator",
+  "version": "1.0.0",
+  "description": "Entorno web simulado para generación de logs de tráfico normal y ataques (fuerza bruta, sql injection, ddos flood) para tesis.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "keywords": [
+    "security",
+    "simulation",
+    "logs",
+    "sqli",
+    "bruteforce",
+    "ddos"
+  ],
+  "author": "",
+  "license": "ISC"
+}

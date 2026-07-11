@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node.js (Web Server)
+node_modules/
+package-lock.json
+
+# Datasets and Logs (Evitar subir archivos pesados)
+*.log
+logs/
+*.csv
+
+# Modelos guardados (Se pueden regenerar localmente)
+*.pkl
+
+# Carpetas de IDE
+.idea/
+.vscode/
+.gemini/

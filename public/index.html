@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Security Hub - Simulador de Ciberseguridad y Extracción de Logs</title>
+  <!-- Google Fonts para tipografía premium -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <!-- Archivo de estilos CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Encabezado Global -->
+  <header class="global-header">
+    <div class="header-container">
+      <div class="logo">
+        <span class="logo-icon">🛡️</span>
+        <div class="logo-text">
+          <h1>APEX SECURITY HUB</h1>
+          <p>Entorno de Simulación de Tráfico & Análisis Forense</p>
+        </div>
+      </div>
+      
+      <!-- Navegación por Pestañas -->
+      <nav class="tab-navigation">
+        <button class="nav-tab active" id="tab-console-btn" onclick="switchTab('console')">
+          <span class="btn-icon">💻</span> Consola de Control (Tesis)
+        </button>
+        <button class="nav-tab" id="tab-bank-btn" onclick="switchTab('bank')">
+          <span class="btn-icon">🏦</span> Aplicación Apex Vault
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- =======================================================================
+         PESTAÑA 1: CONSOLA DE CONTROL DE SEGURIDAD (HACKER PANEL)
+         ======================================================================= -->
+    <section id="tab-console" class="tab-panel active">
+      <div class="dashboard-grid">
+        
+        <!-- Panel Lateral: Configuración WAF y Generación de Tráfico -->
+        <div class="panel-column side-panel">
+          
+          <!-- Tarjeta 1: Firewall de Aplicación Web (WAF) & Seguridad -->
+          <div class="card glass-card border-glow-blue">
+            <div class="card-header">
+              <h3>🛡️ Configuración de Seguridad</h3>
+              <span class="badge" id="waf-badge">INACTIVO</span>
+            </div>
+            <div class="card-body">
+              <p class="card-desc">Controla los sistemas de defensa de la aplicación para observar cómo cambian los logs.</p>
+              
+              <div class="setting-item">
+                <div class="setting-info">
+                  <label for="toggle-waf"><strong>Firewall de Aplicación (WAF)</strong></label>
+                  <span>Activa la inspección global de peticiones</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-waf" onchange="updateSecuritySettings()">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <label for="toggle-sqli"><strong>Buscador Vulnerable (SQLi)</strong></label>
+                  <span>Permite concatenación e inyección directa</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-sqli" checked onchange="updateSecuritySettings()">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <label for="toggle-brute"><strong>Vulnerable a Fuerza Bruta</strong></label>
+                  <span>Desactiva el límite de intentos de login</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-brute" checked onchange="updateSecuritySettings()">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <label for="toggle-ddos"><strong>Vulnerable a HTTP Flood</strong></label>
+                  <span>Sin rate limits para peticiones masivas</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-ddos" checked onchange="updateSecuritySettings()">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta 2: Generador de Tráfico y Ataques -->
+          <div class="card glass-card border-glow-red">
+            <div class="card-header">
+              <h3>⚡ Orquestador de Simulación</h3>
+            </div>
+            <div class="card-body">
+              <p class="card-desc">Lanza scripts automatizados para generar tráfico que quedará registrado en los logs.</p>
+              
+              <div class="simulation-actions">
+                
+                <!-- Tráfico Normal -->
+                <div class="action-block">
+                  <div class="action-info">
+                    <h4>Tráfico de Usuario Normal</h4>
+                    <p>Simula peticiones legítimas (navegación, depósitos).</p>
+                  </div>
+                  <div class="action-controls">
+                    <button class="btn btn-emerald" id="btn-traffic-normal" onclick="toggleNormalTrafficSim()">
+                      ▶️ Iniciar Tráfico
+                    </button>
+                  </div>
+                  <div class="progress-bar-container hidden" id="progress-normal-container">
+                    <div class="progress-bar pulse-green" id="progress-normal" style="width: 100%"></div>
+                    <span class="progress-text">Simulando visitas constantes...</span>
+                  </div>
+                </div>
+
+                <!-- Fuerza Bruta -->
+                <div class="action-block">
+                  <div class="action-info">
+                    <h4>Ataque de Fuerza Bruta</h4>
+                    <p>50 intentos rápidos de login con diccionario común.</p>
+                  </div>
+                  <div class="action-controls">
+                    <button class="btn btn-yellow" id="btn-attack-brute" onclick="triggerBruteForceSim()">
+                      💀 Lanzar Fuerza Bruta
+                    </button>
+                  </div>
+                  <div class="progress-bar-container hidden" id="progress-brute-container">
+                    <div class="progress-bar" id="progress-brute" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <!-- SQL Injection -->
+                <div class="action-block">
+                  <div class="action-info">
+                    <h4>Ataque SQL Injection (SQLi)</h4>
+                    <p>Peticiones maliciosas buscando exfiltrar usuarios/hashes.</p>
+                  </div>
+                  <div class="action-controls">
+                    <button class="btn btn-red" id="btn-attack-sqli" onclick="triggerSQLiSim()">
+                      💉 Lanzar SQL Injection
+                    </button>
+                  </div>
+                  <div class="progress-bar-container hidden" id="progress-sqli-container">
+                    <div class="progress-bar" id="progress-sqli" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <!-- HTTP Flood -->
+                <div class="action-block">
+                  <div class="action-info">
+                    <h4>Ataque HTTP Flood (DDoS)</h4>
+                    <p>Inunda el servidor con 300 peticiones en 3 segundos.</p>
+                  </div>
+                  <div class="action-controls">
+                    <button class="btn btn-purple" id="btn-attack-ddos" onclick="triggerHTTPFloodSim()">
+                      🌊 Inundar Servidor
+                    </button>
+                  </div>
+                  <div class="progress-bar-container hidden" id="progress-ddos-container">
+                    <div class="progress-bar" id="progress-ddos" style="width: 0%"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Panel Central: Terminal de Logs en Tiempo Real y Métricas -->
+        <div class="panel-column main-panel">
+          
+          <!-- Panel de Métricas Rápidas -->
+          <div class="metrics-row">
+            <div class="metric-card glass-card">
+              <span class="metric-icon">📈</span>
+              <div class="metric-data">
+                <span class="metric-value" id="stat-total-req">0</span>
+                <span class="metric-label">Peticiones Totales</span>
+              </div>
+            </div>
+            <div class="metric-card glass-card">
+              <span class="metric-icon text-red">⚠️</span>
+              <div class="metric-data">
+                <span class="metric-value text-red" id="stat-attack-req">0</span>
+                <span class="metric-label">Ataques Registrados</span>
+              </div>
+            </div>
+            <div class="metric-card glass-card">
+              <span class="metric-icon text-emerald">✅</span>
+              <div class="metric-data">
+                <span class="metric-value text-emerald" id="stat-success-rate">100%</span>
+                <span class="metric-label">Tasa Bloqueo WAF</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terminal de Logs -->
+          <div class="card glass-card terminal-card">
+            <div class="card-header terminal-header">
+              <div class="terminal-dots">
+                <span class="dot red-dot"></span>
+                <span class="dot yellow-dot"></span>
+                <span class="dot green-dot"></span>
+              </div>
+              <h3 class="terminal-title">🖥️ Registro de Auditoría de Aplicación (Real-Time Terminal)</h3>
+              
+              <!-- Filtro de logs en tiempo real -->
+              <div class="log-filter-container">
+                <select id="log-filter" onchange="renderLogs()">
+                  <option value="ALL">🔍 Todos los Logs</option>
+                  <option value="NORMAL">🟢 Tráfico Normal</option>
+                  <option value="BRUTE_FORCE">🟡 Fuerza Bruta</option>
+                  <option value="SQL_INJECTION">🔴 SQL Injection</option>
+                  <option value="HTTP_FLOOD">🟣 HTTP Flood (DDoS)</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="terminal-body" id="log-terminal">
+              <!-- Los logs se inyectarán dinámicamente aquí -->
+              <div class="log-line system-line">[SISTEMA] Consola inicializada. Esperando tráfico web...</div>
+            </div>
+
+            <div class="terminal-footer">
+              <div class="terminal-stats">
+                <span>RPS: <strong id="current-rps">0.0</strong></span>
+                <span class="separator">|</span>
+                <span>Tamaño del archivo: <strong id="log-file-size">0 KB</strong></span>
+              </div>
+              <div class="terminal-actions">
+                <button class="btn btn-xs btn-gray" onclick="clearLogs()">🧹 Limpiar Logs</button>
+                <button class="btn btn-xs btn-blue" onclick="downloadLogs('clf')">💾 Descargar .LOG (Apache CLF)</button>
+                <button class="btn btn-xs btn-blue" onclick="downloadLogs('json')">💾 Descargar .JSON</button>
+                <button class="btn btn-xs btn-blue" onclick="downloadLogs('csv')">💾 Descargar .CSV</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel de Exfiltración de Base de Datos (SQLi Monitor) -->
+          <div class="card glass-card border-glow-green hidden" id="exfiltration-monitor-card">
+            <div class="card-header">
+              <h3 class="text-green">🔓 Monitor de Exfiltración de Datos (Éxito SQL Injection)</h3>
+              <span class="badge badge-red">DATOS EXPUESTOS</span>
+            </div>
+            <div class="card-body">
+              <p class="card-desc">Esta tabla se llena dinámicamente al explotar con éxito una inyección SQL tipo UNION en el buscador de transacciones.</p>
+              <div class="table-container">
+                <table class="data-table" id="exfiltrated-table">
+                  <thead>
+                    <tr>
+                      <th>Usuario Comprometido</th>
+                      <th>Email</th>
+                      <th>Hash de Contraseña (MD5/SHA256)</th>
+                      <th>Número de Cuenta</th>
+                      <th>Saldo Expuesto</th>
+                    </tr>
+                  </thead>
+                  <tbody id="exfiltrated-data-rows">
+                    <!-- Filas exfiltradas dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         PESTAÑA 2: APLICACIÓN WEB OBJETIVO (APEX VAULT BANKING PORTAL)
+         ======================================================================= -->
+    <section id="tab-bank" class="tab-panel">
+      <div class="bank-app-container">
+        
+        <!-- Estado de Simulación y Alerta en la App Web -->
+        <div class="bank-waf-banner" id="bank-waf-status-banner">
+          <span class="waf-banner-icon">🔒</span>
+          <span id="bank-waf-status-text">Seguridad de la App: Estado Estándar (WAF Desactivado)</span>
+        </div>
+
+        <!-- PORTAL 2.A: PANTALLA DE INICIO DE SESIÓN -->
+        <div id="bank-login-screen" class="bank-card auth-card">
+          <div class="bank-logo">
+            <span class="bank-logo-icon">🏦</span>
+            <h2>APEX VAULT</h2>
+            <p>Banca Privada y Seguridad Financiera</p>
+          </div>
+          
+          <div id="login-error-msg" class="alert-box alert-error hidden"></div>
+          <div id="login-success-msg" class="alert-box alert-success hidden"></div>
+
+          <form id="bank-login-form" onsubmit="handleBankLogin(event)">
+            <div class="form-group">
+              <label for="bank-username">Usuario corporativo o ID</label>
+              <input type="text" id="bank-username" placeholder="Ej. fabri o admin" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="bank-password">Contraseña secreta</label>
+              <input type="password" id="bank-password" placeholder="••••••••" required autocomplete="off">
+            </div>
+            
+            <!-- Tip educativo de la tesis -->
+            <div class="thesis-hint">
+              <strong>💡 Pista de Prueba:</strong> Prueba ingresar <code>admin</code> y contraseña incorrecta para generar logs de fallo, o usa inyección clásica <code>admin' --</code> en el usuario para saltarte la autenticación si la seguridad SQLi está desactivada.
+            </div>
+
+            <button type="submit" class="btn-bank-primary">Ingresar al Portal</button>
+          </form>
+        </div>
+
+        <!-- PORTAL 2.B: PANEL DE USUARIO LOGUEADO (DASHBOARD) -->
+        <div id="bank-dashboard-screen" class="hidden">
+          
+          <!-- Navbar del Dashboard -->
+          <div class="dashboard-nav">
+            <div class="dashboard-user-profile">
+              <div class="user-avatar">👤</div>
+              <div class="user-meta">
+                <h4 id="logged-user-name">Felipe Alvarez</h4>
+                <p id="logged-user-role">Cliente Preferente</p>
+              </div>
+            </div>
+            <button class="btn btn-sm btn-gray" onclick="handleBankLogout()">❌ Salir</button>
+          </div>
+
+          <!-- Tarjetas Principales del Dashboard -->
+          <div class="bank-dashboard-grid">
+            
+            <!-- Tarjeta de Saldo y Cuenta -->
+            <div class="bank-card balance-card">
+              <div class="balance-header">
+                <span>Cuenta Corriente Preferente</span>
+                <span class="bank-card-chip">📟</span>
+              </div>
+              <h2 class="account-balance" id="logged-user-balance">$0.00</h2>
+              <div class="balance-footer">
+                <span class="account-num" id="logged-user-account">ES12-0000-0000-0000</span>
+                <span class="bank-card-type">VISA Platinum</span>
+              </div>
+            </div>
+
+            <!-- Buscador de transacciones (VULNERABLE A SQL INJECTION) -->
+            <div class="bank-card search-card">
+              <h3>🔍 Historial & Búsqueda Avanzada de Movimientos</h3>
+              <p class="card-desc">Filtra tus transacciones por palabras clave. Esta consulta es de base de datos directa.</p>
+              
+              <form class="search-form" onsubmit="handleTransactionSearch(event)">
+                <input type="text" id="transaction-search-input" placeholder="Ej: Starbucks, Amazon, Nómina..." autocomplete="off">
+                <button type="submit" class="btn-bank-accent">Buscar</button>
+              </form>
+
+              <!-- Tip educativo de inyección SQL -->
+              <div class="thesis-hint mt-10">
+                <strong>🛡️ Prueba de Tesis (SQLi Manual):</strong> 
+                Prueba buscando <code>Amazon</code> para una búsqueda normal. 
+                <br>Si quieres vulnerar la BD, escribe <code>' OR 1=1 --</code> (muestra las de todos los usuarios) o 
+                <code>' UNION SELECT username, password_hash, email, balance FROM users --</code> (exfiltra credenciales en la tabla).
+              </div>
+
+              <div id="search-feedback-msg" class="alert-box alert-error mt-10 hidden"></div>
+            </div>
+
+          </div>
+
+          <!-- Tabla de Transacciones -->
+          <div class="bank-card table-card mt-20">
+            <div class="table-header-row">
+              <h3>📄 Transacciones Recientes del Cliente</h3>
+              <span class="badge" id="results-count">0 resultados</span>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table" id="transactions-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Concepto/Descripción</th>
+                    <th>Tipo</th>
+                    <th>Importe</th>
+                  </tr>
+                </thead>
+                <tbody id="transactions-data-rows">
+                  <!-- Transacciones inyectadas dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Visor de consulta SQL ejecutada en tiempo real -->
+            <div class="sql-query-monitor" id="sql-monitor-box">
+              <span class="sql-monitor-label">Consulta SQL enviada a la base de datos:</span>
+              <code id="executed-sql-code">SELECT * FROM transactions WHERE user_id = ? AND description LIKE ?</code>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="global-footer">
+    <div class="footer-container">
+      <p>&copy; 2026 Entorno Simulado de Ciberseguridad para Tesis de Grado. Creado con fines académicos.</p>
+      <p>Desarrollado en HTML5/CSS3/Express. Todos los logs se almacenan localmente en la carpeta <code>/logs</code>.</p>
+    </div>
+  </footer>
+
+  <!-- Lógica JavaScript del Frontend -->
+  <script src="js/app.js"></script>
+</body>
+</html>
